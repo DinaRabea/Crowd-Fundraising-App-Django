@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+    
+{% block content %}
+<div class="ordering container card shadow mt-4" style="margin-bottom:1%">
+    <h1 class="text-center text-upper h1 text-capitalize  pt-4 " > searching by {{search_type}} </h1>
+
+    <h3 class="text-center text-upper h3  text-capitalize " > the result is   <span class="font-weight-bold fs-1 text-danger " style="text-shadow:0 0 10px #999" >    {{ projects|length }} </span>  </h3>
+  <div class="row pt-5 pb-5">
+        {% for project in  projects  %}
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xm-8 mb-4">
+            <div class="card h-100 shadow" style='overflow:hidden;'>
+                <div id="carousel-{{ project.id }}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        {% for picture in project.pictures.all %}
+                        <button type="button" data-bs-target="#carousel-{{ project.id }}" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}"></button>
+                        {% endfor %}
+                    </div>
+                    <div class="carousel-inner">
+                        {% for picture in project.pictures.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif  %}">
+                            <img src="{{ picture.image.url }}" class="d-block w-100" alt="...">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ project.id }}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ project.id }}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ project.total_target }}</h6>
+                    <p class="card-text">{{ project.details|slice:50 }}</p>
+                    <p class="card-text">Rating:{{project.avg_rating}}</p>
+                    <div>
+                        {% for tag in project.tags.all %}
+                        <span class="badge bg-primary me-1">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'project_detail' project.id %}" class="btn btn-primary mt-2">Show More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div>  
+            
+
+       
+       <div class="m-auto pt-5 pb-5 text-center" style="width:400px;max-width:100%" >
+        <img width="100%" src='https://media4.giphy.com/media/ZzsKRBj6hTJhBRseeJ/200w.webp?cid=ecf05e47sd5cgaakgkj5uxxvjkkvhg8g5dk53gy0vpmr75ho&rid=200w.webp&ct=g' />    
+       </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div> 
+</div>
+{% endblock content %}

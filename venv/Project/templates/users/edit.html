@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h1 class="text-center mt-5"> Update Information</h1>
+
+<div class="container p-5 ">
+    <div class="shadow p-5 " style="    box-shadow: -1px -1px 12px 5px #ffc10785 !important;">
+        <form class="row g-3" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form|crispy}}
+            <div class="text-center ">
+                <button class="btn btn-primary mt-4 px-4 pb-2 m-auto" type="submit">Save</button>
+            </div>
+                </form>
+    </div>
+</div>
+  
+
+{%endblock content%}

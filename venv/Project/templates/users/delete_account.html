@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container border-5" style="margin-top:11% ; height:58.1vh">
+  <div class="row">
+
+<form class="delete-account-form" method="post">
+  {% csrf_token %}
+  <h1 class="delete-account-header">Do you want to delete your account?</h1>
+
+  {% if message %}
+  <div class="alert alert-danger" role="alert">
+    {{ message }}
+  </div>
+  {% endif %}
+
+  <div class="form-group my-5">
+    <label for="password" class="sr-only">Password</label>
+    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+  </div>
+
+  <div class="form-group">
+    <button type="submit" class="btn btn-danger me-3">Yes</button>
+    <a href="{% url 'show' user.id %}" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
+
+  </div>
+</div>
+
+
+{% endblock %}

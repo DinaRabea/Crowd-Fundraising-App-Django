@@ -1,0 +1,82 @@
+<style>
+    .animation-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      
+      .checkmark {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        border-radius: 50%;
+        display: inline-block;
+        stroke-width: 2;
+        stroke: #4caf50;
+        stroke-miterlimit: 10;
+      }
+      
+      .checkmark__circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        stroke: #4caf50;
+        fill: none;
+        animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+      }
+      
+      .checkmark__check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+      }
+      
+      .message {
+        font-size: 32px;
+        font-weight: bold;
+        color: #233f99;
+        margin-top: 20px;
+        opacity: 0;
+        animation: fadein 0.5s ease-in 1.2s forwards;
+      }
+      
+      @keyframes stroke {
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+      
+      @keyframes fadein {
+        100% {
+          opacity: 1;
+        }
+      }
+      
+</style>
+<script>
+  setTimeout(function() {
+    window.location.href = '/accounts/login/';
+  }, 5000); 
+</script>
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="animation-container">
+  <div class="checkmark d-flex justify-content-center align-items-center">
+    <div class="checkmark__circle mx-3"></div>
+    <div class="checkmark__check mx-3"></div>
+  </div>
+  <h1 class="message text-center mt-5">Activated!</h1>
+  <h3 class="message text-center mt-4">Welcome Mr/Miss: {{user}}</h3>
+  <h5 class="message text-center mt-3">Your account "{{email}} was Activated "</h5>
+  <h6 class="message text-center mt-3">Now you will be redirected to login to start enjoying navigating through our website</h6>
+</div>
+{% endblock %}
+
+ 

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %} All Projects {% endblock %}
+
+{% block nav %}Home{% endblock %}
+
+{% block content %} 
+<div class=" text-end">
+  <a class="" href="{% url 'add_project' %}" style="cursor:pointer"><i class="fa-solid fa-circle-plus text-success  fa-5x mt-5 me-5"></i></a>
+
+</div>
+<div class="container my-5">
+  <div class="row g-5">
+  {% for prod in allpro %}
+  <div class="col-lg-3 col-md-4 my-3 ">
+  
+      <div class="card text-center p-3 rounded-4" style="box-shadow:5px 5px 5px gray;">
+          <div id="carousel-{{prod.id}}" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+              {% for i in prod.pictures.all %}
+              <button type="button" data-bs-target="#carousel-{{prod.id}}" data-bs-slide-to="{{forloop.counter0}}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
+              {% endfor %}
+            </div>
+            <div class="carousel-inner">
+              {% for y in prod.pictures.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{y.image.url}}" class="d-block w-100" style="height: 250px;" alt="product image">
+              </div>
+              {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{prod.id}}" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{prod.id}}" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <h5 class="card-title p-2 fw-bolder h2 ">{{prod.title|slice:10}}</h5>
+          <h5 class="card-title p-2 text-muted h4">{{ prod.details|slice:10}}</h5>
+          <div class="card-body">
+            {%if prod.creator == user%}
+            <a class="btn btn-outline-secondary  px-4" href="{% url 'project_detail' prod.id %}">Show</a>
+            <a class="btn btn-outline-dark ms-3" href="{% url 'project_update' prod.id %}">Update</a>
+            {%else%}
+            <a class="btn btn-outline-secondary  px-4" href="{% url 'project_detail' prod.id %}">Show</a>
+
+            {%endif%}
+          
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+{% endblock %}

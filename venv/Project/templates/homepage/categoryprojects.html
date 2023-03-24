@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}    
+    <div class="container" style="margin-bottom:6.5%;">
+        <div class="row g-5">
+            {%  if projectAll  %}
+            <h1 class="text-center text-dark mb-5" style="margin-top: 8%;">{{category}} Projects</h1>
+                    {% for project in projectAll %}
+                <div class="col-lg-3 col-md-4 my-3" >
+                    <div class="card rounded-3 text-center h-100" style="box-shadow:5px 5px 5px gray">
+                        <div class="card-header">
+                            <h3 class="card-title fw-bolder py-2">{{project.title}}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="carousel-{{prod.id}}" class="carousel slide" data-bs-ride="carousel">
+
+                                <div class="carousel-inner mb-5" style="height:15vh">
+                                    {% for y in project.pictures.all %}
+                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                            <img src="{{y.image.url}}" class="d-block w-100 rounded-5" alt="product image">
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{prod.id}}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{prod.id}}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            <p> {% for tag in project.tags.all %}
+                                <span class="badge bg-secondary me-1 fs-6">{{ tag }}</span>
+                                {% endfor %}</p>
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-primary rounded-3 my-3">Show More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div id="carousel-{{prod.id}}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for i in prod.pictures.all %}
+                        <button type="button" data-bs-target="#carousel-{{prod.id}}" data-bs-slide-to="{{forloop.counter0}}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for y in prod.pictures.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{y.image.url}}" class="d-block w-100" alt="product image">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% else %}
+            <div class="container">
+                <div class="row">
+                    <div style="height:57.7vh;margin-top:10%">
+                        <h1 class="text-center mt-5">No Project belongs to {{category}} Projects</h1>
+                    </div>
+                </div>
+            </div>
+            
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock content %}

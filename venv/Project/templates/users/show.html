@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  img.img-circle {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #000;
+  }
+
+  .card-text {
+    font-size: 18px;
+    color: #555;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+
+  /* Add margin between buttons */
+  .btn-group > .btn:not(:last-child) {
+    margin-right: 5px;
+  }
+
+  /* Add margin between card columns */
+  .card-columns {
+    column-gap: 15px;
+  }
+</style>
+<div class="container mt-5" >
+  <div class="row">
+    {% if user.image %}
+    <div class="col-md-4 ">
+      <img src="{{ user.image.url }}" class="img-responsive img-circle" alt="Profile Picture">
+    </div>
+    {% endif %}
+  
+    <div class="col-md-8 ">
+      <h1>{{ user.Firstname }} {{ user.Lastname }}</h1>
+      <p><strong>Email:</strong> {{ user.Email }}</p>
+      <p><strong>Phone:</strong> {{ user.mobile_phone }}</p>
+      <div class="btn-group">
+        <a class="btn btn-outline-success" href="{% url 'edit' user.id %}" role="button">Update Profile</a>
+        <a class="btn btn-outline-danger" href="{% url 'delete_account' user.id %}" role="button">Delete Profile</a>
+        <a class="btn btn-outline-secondary" href="{% url 'moreInfo' user.id %}" role="button">Optional</a>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Projects</h2>
+      {% if projects %}
+      <ul>
+
+        {% for p in projects %}
+        <li>
+          <a class="btn btn-outline-secondary my-3 px-4" href="{% url 'project_detail' p.id %}">{{ p }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="rounded-4 border-5">
+          <h4 class="border-5 py-2 mt-3 ms-5">No Projects yet </h4>
+      </div>
+
+      {% endif %}
+ 
+    </div>
+  </div>
+  <hr>
+  <div class="row" style="margin-bottom: 20.2%;">
+    <div class="col-md-12">
+      <h2 class="mb-4 mt-3">Donations</h2>
+      {% if donations %}
+      <div class="card-columns rounded-4 border-5 mb-5">
+        {% for d in donations %}
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Project Name: {{ d.project }}</h5>
+            <p class="card-text">Donation Amount: {{ d.donate }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <h4 class="ms-5 mt-4">No donations yet</h4>
+      {% endif %}
+    
+    </div>
+  </div>
+</div>
+{% endblock content %}

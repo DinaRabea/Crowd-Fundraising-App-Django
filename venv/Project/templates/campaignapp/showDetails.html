@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %} 
+<div class="container mt-5 ">
+  <div class="row">
+    <div class="card bg-dark col-sm-8 m-auto border-3 rounded-5">
+      {% comment %}
+      ######################################### title & Rate #####################################
+      {% endcomment %}
+      <div class="d-flex text-white">
+        <h1 class="my-5  ms-4 text-white ms-5">{{projectdetails.title}}</h1>
+        <div class="d-flex mt-5" style="margin-left: 55%">
+          <i class="fa-regular fa-star fs-2 me-3 text-warning"></i>
+          <h2>{{ projectdetails.avg_rating }}</h2>
+        </div>
+      </div>
+      {% comment %}
+      ######################################### slider #####################################
+      {% endcomment %}    
+      <div id="projectCarousel" class="carousel slide col-lg-12 col-md-12 px-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {% if projectdetails.pictures %}
+            {% for y in projectdetails.pictures.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ y.image.url }}" class="d-block w-100 rounded-3" alt="projectdetails">
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="carousel-item active">
+              <p>No image available.</p>
+            </div>
+          {% endif %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div> 
+      {% comment %}
+      ######################################### body #####################################
+      {% endcomment %}    
+      <div class="card-body text-white">
+        {% comment %}
+        ######################################### description #####################################
+        {% endcomment %}
+        <h3 class="text-secondary ms-4 mt-5">Description</h3>
+        <h6 class="ms-4 mt-3">{{projectdetails.details}} </h6>
+        {% comment %}
+        ######################################### Category #####################################
+        {% endcomment %}
+        <h3 class="text-secondary ms-4 mt-5">Category</h3>
+        <h5 class="ms-4 mt-3">{{projectdetails.category}}</h5>
+        {% comment %}
+        ######################################### Tags #####################################
+        {% endcomment %}
+        <h3 class="text-secondary ms-4 mt-5">Tags</h3>
+        <div>
+          {%for tag in projectdetails.tags.all%}
+          <span class="btn btn-outline-secondary ms-5 mt-3 px-5 py-2 text-white">{{tag}}</span>
+          {% endfor %}
+        </div>
+        
+        {% comment %}
+        ######################################### time #####################################
+        {% endcomment %}
+          <div class="row text-white mt-4 ms-3 mt-5">
+            <div class="start col-sm-4">
+              <div class="d-flex">
+                <i class="fa-regular fa-clock fs-3 mt-1 me-3 opacity-50"></i>
+                <h3 class="text-secondary">Started</h3>
+              </div>
+              <h5 class="mt-3">{{projectdetails.start_time}}</h5>
+            </div>
+            <div class="end col-sm-4 offset-md-3">
+              <div class="d-flex">
+              <i class="fa-regular fa-clock fs-3 mt-1 me-3 opacity-50"></i>
+              <h3 class="text-secondary">End</h3>
+            </div>
+            <h5 class="mt-3">{{projectdetails.end_time}}</h5>
+            </div>
+          </div>
+        
+        {% comment %}
+        ######################################### Donation #####################################
+        {% endcomment %}
+        <div class="row mt-5">
+          <div class="col-sm-4">
+            <h3 class="text-secondary ms-4 mt-3">Donation</h3>
+            <h5 class="ms-5 mt-3">{{projectdetails.donation}}</h5>
+          </div>
+          <div class="col-sm-4 offset-sm-3">
+            <h3 class="text-secondary ms-4 mt-3">Total Target</h3>
+            <h5 class="ms-5 mt-3">{{projectdetails.total_target}}</h5>
+          </div>
+        </div>
+        {% comment %}
+        ######################################### related project #####################################
+        {% endcomment %}
+        <div class="">
+          <h3 class="text-secondary ms-4 mt-3">Related Projects</h3>
+          {%for relatedProjects in RelatedProjects%}
+          <a href="{% url 'project_detail' relatedProjects.id %}" class="btn btn-outline-secondary px-4 py-2  ms-5 mt-4 text-white"> {{relatedProjects}}</a>
+          {%endfor%}
+        </div>
+ 
+
+        {% comment %}
+        ######################################### buttons #####################################
+        {% endcomment %}
+        <div class="row my-5">
+          <div class="col-sm-4 comment fs-1 ps-5">
+            <i  data-bs-toggle="modal" data-bs-target="#commentModal" class="fa-regular fa-comment text-primary ms-5" style="cursor: pointer;"></i>
+          </div>
+          <div class="col-sm-4 donate fs-1 ps-5">
+            {% if projectdetails.creator != user %}
+            <i data-bs-toggle="modal" data-bs-target="#donate" class="fa-solid fa-hand-holding-medical text-success ms-5" style="cursor: pointer;"></i>            
+            {%else%}
+              {%if projectdetails.donation < projectdetails.total_target %}
+              <i data-bs-toggle="modal" data-bs-target="#donate" class="fa-solid fa-hand-holding-medical text-success ms-5" style="cursor: pointer;"></i>            
+              {%else%}
+              <h3 class="text-success">Donations reached the total target</h3>
+              {%endif%}
+            {% endif%}
+          </div>
+          {% if rate_status  %}
+          <div class="col-sm-4 rate fs-1 ps-5">
+            <h1 class="text-danger mt-2">Rated</h1>
+          </div>
+          {% else %}
+          <div class="col-sm-4 rate fs-1 ps-5">
+            <i data-bs-toggle="modal" data-bs-target="#ratingModal" class="fa-solid fa-star-half-stroke text-warning ms-5" style="cursor: pointer;"></i>
+          </div>
+          {% endif %}
+        </div>
+        {% comment %}
+        ######################################### delete project #####################################
+        {% endcomment %}
+        {% if status %}
+        {% if projectdetails.creator == user%}
+        <button type="button" class="btn btn-outline-danger my-3 w-100 mt-3" data-bs-toggle="modal" data-bs-target="#confirm-delete-{{projectdetails.id}}">
+          Delete
+        </button>
+        {%endif%}
+        {%endif%}
+        <div class="modal fade text-dark" id="confirm-delete-{{projectdetails.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete "{{projectdetails.title}}"?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+                <a href="{% url 'deleteproduct' projectdetails.id %}" class="btn btn-danger btn-ok">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% comment %}
+        ######################################### report project #####################################
+        {% endcomment %}
+        {% if reported_by_this_user%}
+            <h2 class="text-danger text-center">You Reported This project !!</h2>
+        {%else%}
+          <button type="button" class="btn btn-outline-danger mt-4 w-100 mb-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report Project</button>
+        {%endif%}     
+      </div>
+    </div>
+  </div>
+</div>
+{% comment %}
+######################## comment #######################
+{% endcomment %}
+<div class="container border border-dark w-50 border-3 my-5 rounded-5">
+  <h1 class="text-center my-5">Comments</h1>
+  {% for com in comment %}
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card mt-4 my-5">
+        <div class="card-body">
+          <div class="media mb-3 ">
+            <div class="media-body ">
+              <h5 class="mt-0">{{com.user}}</h5>
+              <small class="text-muted">{{com.date_created}}</small>
+            </div>
+          </div>
+          <p>{{com}}</p>
+          {% if com.is_reported %}
+          <p class="text-danger">This comment has been reported.</p>
+      {% else %}
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportCommentModal">Report</button>
+      <!-- Modal -->
+      <div class="modal fade" id="reportCommentModal" tabindex="-1" aria-labelledby="reportCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="reportCommentModalLabel">Report Comment</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to report this comment?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form method="POST" action="{% url 'report_comment' com.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Report</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+         </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% comment %}
+########################################################## modal ########################################################
+{% endcomment %}
+<!-- rating modal -->
+<div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ratingModalLabel">Add a Rating</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+   
+        <form action="{% url 'add_rating' projectdetails.id %}" method="POST">
+          {% csrf_token %}
+       
+          {{ rating_form.as_p }}
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Comment modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title " id="commentModalLabel">Add a comment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'add_comment' projectdetails.id %}">
+          {% csrf_token %}
+          {{ comment_form.as_p }}
+          <button type="submit" class="btn btn-danger">Add comment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- donate modal -->
+<div class="modal fade" id="donate" tabindex="-1" role="dialog" aria-labelledby="donateLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title " id="donateLabel">Add a donate</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'add_donation' projectdetails.id %}">
+          {% csrf_token %}
+          {{ donation_form.as_p }}
+          <button type="submit" class="btn btn-danger">Add a donate</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- report project modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reportModalLabel">Report Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to report this project?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form method="POST" action="{% url 'report_project' projectdetails.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Report</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock%}
+</body>
+</html>

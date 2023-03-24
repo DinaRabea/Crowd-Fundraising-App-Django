@@ -1,0 +1,18 @@
+{% extends 'userbase.html'%}
+{% load static %}
+{% block content %}
+<style>
+  body{
+    background-color: #DDD ;
+  }
+</style>
+  <div class="col-md-12">
+        <div class="w-100 mt-2">
+            <div class="col-md-12 mt-5 mb-5">
+                <span class=" text-danger fw-bold ">{{user.comment_text}}</span>
+                <span class=" text-danger fw-bold ">{{user.date_created}}</span>
+            </div>
+    
+        </div>
+  </div>
+{%endblock content%}

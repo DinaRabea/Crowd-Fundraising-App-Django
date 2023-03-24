@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<h1 class="text-center mt-5"> Create an Account</h1>
+
+<div class="container p-5 ">
+  <div class="shadow p-5 " style="    box-shadow: -1px -1px 12px 5px #ffc10785 !important;">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{  form|crispy }}
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary mt-4 px-4 pb-2 m-auto">Register</button>
+      </div>
+    </form>
+</div>
+
+  </div>
+{% endblock %}

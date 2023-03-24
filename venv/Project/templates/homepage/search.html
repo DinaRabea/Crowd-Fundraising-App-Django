@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+    
+{% block content %}
+<div class="ordering container">
+    <h1> search page </h1>
+  <div class="row">
+        {% for project in  answer  %}
+        <div class="col-sm-8 col-md-6 col-lg-4 ">
+            <div class="card" style="">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                <h5 class="card-title">{{project.title}}</h5>
+                <h5 class="card-title">{{project.total_target}}</h5>
+                <h5 class="card-title">{{project.tags}}</h5>
+                <p class="card-text">{{project.details|slice:30 }}</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div>No Resulted !</div>
+        {% endfor %}
+        </div>
+    </div> 
+</div>
+{% endblock content %}
